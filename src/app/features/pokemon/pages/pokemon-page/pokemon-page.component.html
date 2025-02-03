@@ -1,0 +1,14 @@
+<div class="pokemon-page">
+  <header class="pokemon-page__header">
+    <h1>Pokédex</h1>
+    <input type="text" [(ngModel)]="searchTerm" (ngModelChange)="onSearch($event)" placeholder="Rechercher un Pokémon"
+      class="pokemon-page__search">
+  </header>
+
+  <div class="pokemon-grid">
+    <!-- Liste des Pokémons -->
+  </div>
+
+  <app-pagination [currentPage]="currentPage" [totalPages]="totalPages"
+    (pageChange)="onPageChange($event)"></app-pagination>
+</div>
