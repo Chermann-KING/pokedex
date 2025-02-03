@@ -34,6 +34,7 @@ export class PokemonPageComponent implements OnInit {
         offset,
         this.itemsPerPage
       );
+      this.pokemons = data.results;
       this.totalPages = Math.ceil(data.count / this.itemsPerPage);
     } catch (error) {
       console.error('Erreur lors du chargement des Pokémons:', error);
