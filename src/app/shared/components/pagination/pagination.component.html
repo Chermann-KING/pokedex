@@ -1,0 +1,13 @@
+<div class="pagination">
+  <button [disabled]="currentPage === 1" (click)="onPageChange(currentPage - 1)" class="pagination__button">
+    Précédent
+  </button>
+
+  <span class="pagination__info">
+    Page {{ currentPage }} sur {{ totalPages }}
+  </span>
+
+  <button [disabled]="currentPage === totalPages" (click)="onPageChange(currentPage + 1)" class="pagination__button">
+    Suivant
+  </button>
+</div>
