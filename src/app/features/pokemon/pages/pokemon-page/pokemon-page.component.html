@@ -5,10 +5,17 @@
       class="pokemon-page__search">
   </header>
 
-  <div class="pokemon-grid">
-    <!-- Liste des Pokémons -->
-  </div>
+  <div class="pokemon-page__content">
+    <div class="pokemon-page__list">
+      <app-pokemon-list [pokemons]="pokemons" (selectPokemon)="onSelectPokemon($event)">
+      </app-pokemon-list>
 
-  <app-pagination [currentPage]="currentPage" [totalPages]="totalPages"
-    (pageChange)="onPageChange($event)"></app-pagination>
+      <app-pagination [currentPage]="currentPage" [totalPages]="totalPages" (pageChange)="onPageChange($event)">
+      </app-pagination>
+    </div>
+
+    <div *ngIf="selectedPokemon" class="pokemon-page__detail">
+      <app-pokemon-detail [pokemon]="selectedPokemon"></app-pokemon-detail>
+    </div>
+  </div>
 </div>

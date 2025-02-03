@@ -24,9 +24,14 @@
   width: 300px;
 }
 
-.pokemon-grid {
+.pokemon-page__content {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-columns: 1fr 400px;
   gap: 2rem;
-  margin-bottom: 2rem;
+}
+
+@media (max-width: 1024px) {
+  .pokemon-page__content {
+    grid-template-columns: 1fr;
+  }
 }

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { PokemonService } from '../../../../core/services/pokemon.service';
 import { Pokemons } from '../../../../core/models/pokemons.model';
+import { Pokemon } from '../../../../core/models/pokemon.model';
 
 @Component({
   selector: 'app-pokemon-page',
@@ -9,8 +10,9 @@ import { Pokemons } from '../../../../core/models/pokemons.model';
   templateUrl: './pokemon-page.component.html',
   styleUrl: './pokemon-page.component.scss',
 })
-export class PokemonPageComponent {
+export class PokemonPageComponent implements OnInit {
   pokemons: Pokemons[] = [];
+  selectedPokemon: Pokemon | null = null;
   currentPage = 1;
   totalPages = 1;
   itemsPerPage = 20;
@@ -36,6 +38,22 @@ export class PokemonPageComponent {
     } catch (error) {
       console.error('Erreur lors du chargement des Pokémons:', error);
     }
+  }
+
+  async onSelectPokemon(pokemon: Pokemons): Promise<void> {
+    try {
+      const id = this.getIdFromUrl(pokemon.url);
+      this.selectedPokemon = await this._pokemonService.getPokemonById(
+        Number(id)
+      );
+    } catch (error) {
+      console.error('Erreur lors du chargement des détails du Pokémon:', error);
+    }
+  }
+
+  getIdFromUrl(url: string): string {
+    const matches = url.match(/\/(\d+)\/$/);
+    return matches ? matches[1] : '1';
   }
 
   onPageChange(page: number): void {

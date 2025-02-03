@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Pokemons } from '../../../../core/models/pokemons.model';
 
 @Component({
@@ -10,6 +10,7 @@ import { Pokemons } from '../../../../core/models/pokemons.model';
 })
 export class PokemonListComponent {
   @Input() pokemons: Pokemons[] = [];
+  @Output() selectPokemon = new EventEmitter<Pokemons>();
 
   getIdFromUrl(url: string): string {
     const matches = url.match(/\/(\d+)\/$/);
@@ -21,7 +22,6 @@ export class PokemonListComponent {
   }
 
   onSelectPokemon(pokemon: Pokemons): void {
-    const id = this.getIdFromUrl(pokemon.url);
-    // TODO: Implémenter la sélection du Pokémon
+    this.selectPokemon.emit(pokemon);
   }
 }
