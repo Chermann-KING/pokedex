@@ -1,0 +1,33 @@
+<div *ngIf="pokemon" class="pokemon-detail">
+  <div class="pokemon-detail__header">
+    <h2>{{ pokemon.name | titlecase }}</h2>
+    <span class="pokemon-detail__id">#{{ pokemon.id.toString().padStart(3, '0') }}</span>
+  </div>
+
+  <div class="pokemon-detail__content">
+    <img [src]="pokemon.sprites.front_default" [alt]="pokemon.name" class="pokemon-detail__image">
+
+    <div class="pokemon-detail__info">
+      <div class="pokemon-detail__types">
+        <span *ngFor="let type of pokemon.types" class="pokemon-detail__type" [attr.data-type]="type.type.name">
+          {{ type.type.name | titlecase }}
+        </span>
+      </div>
+
+      <div class="pokemon-detail__stats">
+        <p>Taille: {{ pokemon.height / 10 }} m</p>
+        <p>Poids: {{ pokemon.weight / 10 }} kg</p>
+      </div>
+
+      <div class="pokemon-detail__abilities">
+        <h3>Capacités:</h3>
+        <ul>
+          <li *ngFor="let ability of pokemon.abilities">
+            {{ ability.ability.name | titlecase }}
+            <span *ngIf="ability.is_hidden">(Cachée)</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

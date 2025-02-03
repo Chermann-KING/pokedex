@@ -1,0 +1,120 @@
+.pokemon-detail {
+  background: white;
+  border-radius: 8px;
+  padding: 2rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.pokemon-detail__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.pokemon-detail__id {
+  color: #666;
+  font-size: 1.2rem;
+}
+
+.pokemon-detail__content {
+  display: flex;
+  gap: 2rem;
+}
+
+.pokemon-detail__image {
+  width: 200px;
+  height: 200px;
+  object-fit: contain;
+}
+
+.pokemon-detail__info {
+  flex: 1;
+}
+
+.pokemon-detail__types {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.pokemon-detail__type {
+  padding: 0.3rem 1rem;
+  border-radius: 20px;
+  color: white;
+  font-size: 0.9rem;
+}
+
+.pokemon-detail__type[data-type="grass"] {
+  background-color: #78c850;
+}
+.pokemon-detail__type[data-type="poison"] {
+  background-color: #a040a0;
+}
+.pokemon-detail__type[data-type="fire"] {
+  background-color: #f08030;
+}
+.pokemon-detail__type[data-type="water"] {
+  background-color: #6890f0;
+}
+.pokemon-detail__type[data-type="bug"] {
+  background-color: #a8b820;
+}
+.pokemon-detail__type[data-type="flying"] {
+  background-color: #a890f0;
+}
+.pokemon-detail__type[data-type="normal"] {
+  background-color: #a8a878;
+}
+.pokemon-detail__type[data-type="electric"] {
+  background-color: #f8d030;
+}
+.pokemon-detail__type[data-type="ground"] {
+  background-color: #e0c068;
+}
+.pokemon-detail__type[data-type="fairy"] {
+  background-color: #ee99ac;
+}
+.pokemon-detail__type[data-type="fighting"] {
+  background-color: #c03028;
+}
+.pokemon-detail__type[data-type="psychic"] {
+  background-color: #f85888;
+}
+.pokemon-detail__type[data-type="rock"] {
+  background-color: #b8a038;
+}
+.pokemon-detail__type[data-type="steel"] {
+  background-color: #b8b8d0;
+}
+.pokemon-detail__type[data-type="ice"] {
+  background-color: #98d8d8;
+}
+.pokemon-detail__type[data-type="ghost"] {
+  background-color: #705898;
+}
+.pokemon-detail__type[data-type="dragon"] {
+  background-color: #7038f8;
+}
+.pokemon-detail__type[data-type="dark"] {
+  background-color: #705848;
+}
+
+.pokemon-detail__stats {
+  margin: 1rem 0;
+}
+
+.pokemon-detail__abilities {
+  h3 {
+    margin-bottom: 0.5rem;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  li {
+    margin-bottom: 0.3rem;
+  }
+}
