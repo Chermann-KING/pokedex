@@ -1,35 +1,62 @@
 <div *ngIf="pokemon" class="pokemon-detail">
   <div class="pokemon-detail__header">
-    <h2>{{ pokemon.name | titlecase }}</h2>
-    <div class="pokemon-detail__header-right">
-      <span class="pokemon-detail__id">#{{ pokemon.id.toString().padStart(3, '0') }}</span>
+    <div class="pokemon-detail__title-group">
+      <h2>{{ pokemon.name | titlecase }}</h2>
+      <span class="pokemon-detail__number">#{{ pokemon.id.toString().padStart(3, '0') }}</span>
       <button class="pokemon-detail__close" (click)="onClose()" aria-label="Fermer">×</button>
+    </div>
+
+    <div class="pokemon-detail__types">
+      <span *ngFor="let type of pokemon.types" class="pokemon-detail__type" [attr.data-type]="type.type.name">
+        <img [src]="getTypeIcon(type.type.name)" [alt]="type.type.name" class="pokemon-detail__type-icon">
+        {{ type.type.name | titlecase }}
+      </span>
     </div>
   </div>
 
   <div class="pokemon-detail__content">
-    <img [src]="pokemon.sprites.front_default" [alt]="pokemon.name" class="pokemon-detail__image">
+    <div class="pokemon-detail__image-container">
+      <img [src]="pokemon.sprites.other?.['official-artwork']?.front_default || pokemon.sprites.front_default"
+        [alt]="pokemon.name" class="pokemon-detail__image">
+    </div>
 
     <div class="pokemon-detail__info">
-      <div class="pokemon-detail__types">
-        <span *ngFor="let type of pokemon.types" class="pokemon-detail__type" [attr.data-type]="type.type.name">
-          {{ type.type.name | titlecase }}
+      <div class="pokemon-detail__measures">
+        <div class="pokemon-detail__measure-tabs">
+          <button class="pokemon-detail__measure-tab" [class.active]="activeTab === 'taille'"
+            (click)="activeTab = 'taille'">
+            Taille
+          </button>
+          <button class="pokemon-detail__measure-tab" [class.active]="activeTab === 'poids'"
+            (click)="activeTab = 'poids'">
+            Poids
+          </button>
+        </div>
+        <span class="pokemon-detail__measure-value">
+          {{ activeTab === 'taille' ? (pokemon.height / 10) + 'm' : (pokemon.weight / 10) + 'kg' }}
         </span>
       </div>
 
-      <div class="pokemon-detail__stats">
-        <p>Taille: {{ pokemon.height / 10 }} m</p>
-        <p>Poids: {{ pokemon.weight / 10 }} kg</p>
+      <div class="pokemon-detail__section">
+        <h3>Capacités</h3>
+        <div class="pokemon-detail__abilities">
+          <div *ngFor="let ability of pokemon.abilities" class="pokemon-detail__ability">
+            {{ ability.ability.name | titlecase }}
+            <span *ngIf="ability.is_hidden" class="pokemon-detail__ability-hidden">(Cachée)</span>
+          </div>
+        </div>
       </div>
 
-      <div class="pokemon-detail__abilities">
-        <h3>Capacités:</h3>
-        <ul>
-          <li *ngFor="let ability of pokemon.abilities">
-            {{ ability.ability.name | titlecase }}
-            <span *ngIf="ability.is_hidden">(Cachée)</span>
-          </li>
-        </ul>
+      <div class="pokemon-detail__section">
+        <h3>Statistiques</h3>
+        <div class="pokemon-detail__stats">
+          <div *ngFor="let stat of pokemon.stats" class="pokemon-detail__stat">
+            <span class="pokemon-detail__stat-name">{{ getStatName(stat.stat.name) }}</span>
+            <div class="pokemon-detail__stat-bar">
+              <div class="pokemon-detail__stat-progress" [style.width.%]="(stat.base_stat / 255) * 100"></div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

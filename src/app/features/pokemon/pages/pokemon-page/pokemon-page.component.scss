@@ -15,7 +15,6 @@
   font-size: 2.5rem;
   color: #3b4cca;
 }
-
 .pokemon-page__search {
   padding: 0.5rem 1rem;
   border: 2px solid #3b4cca;
@@ -30,8 +29,12 @@
   gap: 2rem;
 
   &:has(.pokemon-page__detail) {
-    grid-template-columns: 2fr 1fr;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
   }
+}
+
+.pokemon-page__detail {
+  min-width: 0;
 }
 
 @media (max-width: 1024px) {
