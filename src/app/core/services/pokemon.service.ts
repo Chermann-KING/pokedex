@@ -8,18 +8,80 @@ import { Pokemon } from '../models/pokemon.model';
 })
 export class PokemonService {
   private _baseUrl = 'https://pokeapi.co/api/v2';
-  private _currentPokemons: Pokemons[] = [];
+  private _allPokemons: Pokemons[] = [];
   private _observers: ((pokemons: Pokemons[]) => void)[] = [];
+  private _totalCount = 0;
+  private _isLoading = false;
 
   constructor(private _http: HttpClient) {}
 
+  private async loadAllPokemons(): Promise<void> {
+    if (this._isLoading || this._allPokemons.length > 0) return;
+
+    this._isLoading = true;
+    try {
+      const initial = await new Promise<{ count: number; results: Pokemons[] }>(
+        (resolve, reject) => {
+          this._http
+            .get<{ count: number; results: Pokemons[] }>(
+              `${this._baseUrl}/pokemon?limit=1`
+            )
+            .subscribe({
+              next: (data) => resolve(data),
+              error: (error) => reject(error),
+            });
+        }
+      );
+
+      this._totalCount = initial.count;
+
+      const response = await new Promise<{ results: Pokemons[] }>(
+        (resolve, reject) => {
+          this._http
+            .get<{ results: Pokemons[] }>(
+              `${this._baseUrl}/pokemon?limit=${this._totalCount}`
+            )
+            .subscribe({
+              next: (data) => resolve(data),
+              error: (error) => reject(error),
+            });
+        }
+      );
+
+      this._allPokemons = response.results;
+    } catch (error) {
+      console.error('Erreur lors du chargement des Pokémons:', error);
+    } finally {
+      this._isLoading = false;
+    }
+  }
+
   async getPokemons(
     offset: number = 0,
-    limit: number = 20
+    limit: number = 20,
+    searchTerm: string = ''
   ): Promise<{
     count: number;
     results: Pokemons[];
   }> {
+    // Si on a un terme de recherche et que tous les Pokémons ne sont pas encore chargés
+    if (searchTerm && this._allPokemons.length === 0) {
+      await this.loadAllPokemons();
+    }
+
+    // Si on a un terme de recherche et qu'on a tous les Pokémons
+    if (searchTerm && this._allPokemons.length > 0) {
+      const filteredPokemons = this._allPokemons.filter((pokemon) =>
+        this.matchesSearchSequence(pokemon.name, searchTerm)
+      );
+
+      return {
+        count: filteredPokemons.length,
+        results: filteredPokemons.slice(offset, offset + limit),
+      };
+    }
+
+    // Si on n'a pas de terme de recherche ou si tous les Pokémons ne sont pas encore chargés
     return new Promise((resolve, reject) => {
       this._http
         .get<{ count: number; results: Pokemons[] }>(
@@ -27,8 +89,10 @@ export class PokemonService {
         )
         .subscribe({
           next: (data) => {
-            this._currentPokemons = data.results;
-            this.notifyObservers(data.results);
+            // Lance le chargement de tous les Pokémons en arrière-plan si ce n'est pas déjà fait
+            if (this._allPokemons.length === 0) {
+              this.loadAllPokemons();
+            }
             resolve(data);
           },
           error: (error) =>
@@ -37,8 +101,21 @@ export class PokemonService {
     });
   }
 
+  private matchesSearchSequence(name: string, search: string): boolean {
+    const normalizedName = name.toLowerCase();
+    const normalizedSearch = search.toLowerCase();
+
+    let currentIndex = 0;
+    for (const char of normalizedSearch) {
+      currentIndex = normalizedName.indexOf(char, currentIndex);
+      if (currentIndex === -1) return false;
+      currentIndex += 1;
+    }
+    return true;
+  }
+
   async getPokemonById(id: number): Promise<Pokemon> {
-    return new Promise((resolve, reject) => {
+    return new Promise<Pokemon>((resolve, reject) => {
       this._http.get<Pokemon>(`${this._baseUrl}/pokemon/${id}`).subscribe({
         next: (pokemon) => resolve(pokemon),
         error: (error) => reject(new Error('Pokemon non trouvé: ' + error)),
@@ -59,12 +136,5 @@ export class PokemonService {
 
   private notifyObservers(pokemons: Pokemons[]): void {
     this._observers.forEach((observer) => observer(pokemons));
-  }
-
-  searchPokemons(searchTerm: string): void {
-    const filteredPokemons = this._currentPokemons.filter((pokemon) =>
-      pokemon.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    this.notifyObservers(filteredPokemons);
   }
 }

@@ -22,9 +22,6 @@ export class PokemonPageComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadPokemons();
-    this._pokemonService.subscribe((pokemons) => {
-      this.pokemons = pokemons;
-    });
   }
 
   async loadPokemons(): Promise<void> {
@@ -32,7 +29,8 @@ export class PokemonPageComponent implements OnInit {
       const offset = (this.currentPage - 1) * this.itemsPerPage;
       const data = await this._pokemonService.getPokemons(
         offset,
-        this.itemsPerPage
+        this.itemsPerPage,
+        this.searchTerm
       );
       this.pokemons = data.results;
       this.totalPages = Math.ceil(data.count / this.itemsPerPage);
@@ -64,6 +62,7 @@ export class PokemonPageComponent implements OnInit {
 
   onSearch(term: string): void {
     this.searchTerm = term;
-    this._pokemonService.searchPokemons(term);
+    this.currentPage = 1;
+    this.loadPokemons();
   }
 }
