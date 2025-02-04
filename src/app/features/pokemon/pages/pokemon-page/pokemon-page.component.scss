@@ -26,12 +26,20 @@
 
 .pokemon-page__content {
   display: grid;
-  grid-template-columns: 1fr 400px;
+  grid-template-columns: 1fr;
   gap: 2rem;
+
+  &:has(.pokemon-page__detail) {
+    grid-template-columns: 2fr 1fr;
+  }
 }
 
 @media (max-width: 1024px) {
   .pokemon-page__content {
     grid-template-columns: 1fr;
+
+    &:has(.pokemon-page__detail) {
+      grid-template-columns: 1fr;
+    }
   }
 }
