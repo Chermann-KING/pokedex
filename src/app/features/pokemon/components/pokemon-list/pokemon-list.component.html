@@ -1,5 +1,10 @@
 <div class="pokemon-list">
-  <div *ngFor="let pokemon of pokemons" class="pokemon-card" (click)="onSelectPokemon(pokemon)">
+  <div *ngFor="let pokemon of pokemons" class="pokemon-card" (click)="onSelectPokemon(pokemon)"
+    [style.border-color]="typeColors[pokemon.mainType || 'normal']">
+    <div class="pokemon-card__types">
+      <img *ngFor="let type of pokemon.types" [src]="'./images/pokemon-types/' + type.type.name + '.svg'"
+        [alt]="type.type.name" class="pokemon-card__type-icon">
+    </div>
     <img [src]="getPokemonImage(getIdFromUrl(pokemon.url))" [alt]="pokemon.name" class="pokemon-card__image">
     <h3 class="pokemon-card__name">{{ pokemon.name | titlecase }}</h3>
   </div>

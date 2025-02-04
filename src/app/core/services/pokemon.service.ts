@@ -75,30 +75,62 @@ export class PokemonService {
         this.matchesSearchSequence(pokemon.name, searchTerm)
       );
 
+      // Récupérer les détails pour chaque Pokémon filtré
+      const pokemonsWithDetails = await Promise.all(
+        filteredPokemons.map(async (pokemon) => {
+          const id = this.getIdFromUrl(pokemon.url);
+          const details = await this.getPokemonById(Number(id));
+          return {
+            ...pokemon,
+            types: details.types,
+            mainType: details.types[0]?.type.name,
+          };
+        })
+      );
+
       return {
         count: filteredPokemons.length,
-        results: filteredPokemons.slice(offset, offset + limit),
+        results: pokemonsWithDetails.slice(offset, offset + limit),
       };
     }
 
     // Si on n'a pas de terme de recherche ou si tous les Pokémons ne sont pas encore chargés
-    return new Promise((resolve, reject) => {
-      this._http
-        .get<{ count: number; results: Pokemons[] }>(
-          `${this._baseUrl}/pokemon?offset=${offset}&limit=${limit}`
-        )
-        .subscribe({
-          next: (data) => {
-            // Lance le chargement de tous les Pokémons en arrière-plan si ce n'est pas déjà fait
-            if (this._allPokemons.length === 0) {
-              this.loadAllPokemons();
-            }
-            resolve(data);
-          },
-          error: (error) =>
-            reject(new Error('Pas de données reçues: ' + error)),
-        });
-    });
+    const data = await new Promise<{ count: number; results: Pokemons[] }>(
+      (resolve, reject) => {
+        this._http
+          .get<{ count: number; results: Pokemons[] }>(
+            `${this._baseUrl}/pokemon?offset=${offset}&limit=${limit}`
+          )
+          .subscribe({
+            next: (data) => resolve(data),
+            error: (error) =>
+              reject(new Error('Pas de données reçues: ' + error)),
+          });
+      }
+    );
+
+    // Ajouter les détails pour chaque Pokémon
+    const pokemonsWithDetails = await Promise.all(
+      data.results.map(async (pokemon) => {
+        const id = this.getIdFromUrl(pokemon.url);
+        const details = await this.getPokemonById(Number(id));
+        return {
+          ...pokemon,
+          types: details.types,
+          mainType: details.types[0]?.type.name,
+        };
+      })
+    );
+
+    return {
+      count: data.count,
+      results: pokemonsWithDetails,
+    };
+  }
+
+  private getIdFromUrl(url: string): string {
+    const matches = url.match(/\/(\d+)\/$/);
+    return matches ? matches[1] : '1';
   }
 
   private matchesSearchSequence(name: string, search: string): boolean {
