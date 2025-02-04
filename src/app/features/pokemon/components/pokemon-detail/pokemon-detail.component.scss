@@ -12,6 +12,33 @@
   margin-bottom: 1.5rem;
 }
 
+.pokemon-detail__header-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.pokemon-detail__close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #666;
+  cursor: pointer;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  transition: all 0.2s;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+    color: #333;
+  }
+}
+
 .pokemon-detail__id {
   color: #666;
   font-size: 1.2rem;

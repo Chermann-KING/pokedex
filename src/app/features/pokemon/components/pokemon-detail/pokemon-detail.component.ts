@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Pokemon } from '../../../../core/models/pokemon.model';
 
 @Component({
@@ -10,4 +10,9 @@ import { Pokemon } from '../../../../core/models/pokemon.model';
 })
 export class PokemonDetailComponent {
   @Input() pokemon: Pokemon | null = null;
+  @Output() close = new EventEmitter<void>();
+
+  onClose(): void {
+    this.close.emit();
+  }
 }

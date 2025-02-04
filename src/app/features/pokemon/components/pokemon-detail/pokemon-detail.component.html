@@ -1,7 +1,10 @@
 <div *ngIf="pokemon" class="pokemon-detail">
   <div class="pokemon-detail__header">
     <h2>{{ pokemon.name | titlecase }}</h2>
-    <span class="pokemon-detail__id">#{{ pokemon.id.toString().padStart(3, '0') }}</span>
+    <div class="pokemon-detail__header-right">
+      <span class="pokemon-detail__id">#{{ pokemon.id.toString().padStart(3, '0') }}</span>
+      <button class="pokemon-detail__close" (click)="onClose()" aria-label="Fermer">×</button>
+    </div>
   </div>
 
   <div class="pokemon-detail__content">

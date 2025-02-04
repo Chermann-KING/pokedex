@@ -65,4 +65,8 @@ export class PokemonPageComponent implements OnInit {
     this.currentPage = 1;
     this.loadPokemons();
   }
+
+  onClosePokemonDetail(): void {
+    this.selectedPokemon = null;
+  }
 }

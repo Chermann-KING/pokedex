@@ -15,7 +15,8 @@
     </div>
 
     <div *ngIf="selectedPokemon" class="pokemon-page__detail">
-      <app-pokemon-detail [pokemon]="selectedPokemon"></app-pokemon-detail>
+      <app-pokemon-detail [pokemon]="selectedPokemon" (close)="onClosePokemonDetail()">
+      </app-pokemon-detail>
     </div>
   </div>
 </div>
