@@ -8,7 +8,9 @@ import { Pokemon } from '../models/pokemon.model';
 })
 export class PokemonService {
   // private _baseUrl = 'https://pokeapi.co/api/v2';
-  private _baseUrl = '/api/pokemon';
+  // private _baseUrl = '/api/pokemon';
+  private _baseUrl = 'https://pokedex-pi-fawn.vercel.app/api/pokemon';
+
   private _allPokemons: Pokemons[] = [];
   private _observers: ((pokemons: Pokemons[]) => void)[] = [];
   private _totalCount = 0;
