@@ -47,6 +47,44 @@
   color: #dc3545;
 }
 
+.pokemon-page__error {
+  text-align: center;
+  padding: 2rem;
+
+  p {
+    color: #dc3545;
+    margin-bottom: 1rem;
+  }
+}
+
+.pokemon-page__retry {
+  padding: 0.5rem 1rem;
+  background: #3b4cca;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+
+  &:hover {
+    background: #2a3a99;
+  }
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #3b4cca;
+  border-radius: 50%;
+  margin: 0 auto;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 @media (max-width: 1024px) {
   .pokemon-page__content {
     grid-template-columns: 1fr;

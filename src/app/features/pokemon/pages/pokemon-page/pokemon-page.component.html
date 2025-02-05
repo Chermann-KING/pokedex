@@ -7,24 +7,24 @@
 
   <div class="pokemon-page__content">
     <div *ngIf="isLoading" class="pokemon-page__loader">
-      Chargement...
+      <div class="spinner"></div>
     </div>
 
     <div *ngIf="error" class="pokemon-page__error">
-      {{ error }}
+      <p>{{ error }}</p>
+      <button (click)="loadPokemons()" class="pokemon-page__retry">Réessayer</button>
     </div>
 
-    <div *ngIf="!isLoading && !error" class="pokemon-page__list">
-      <app-pokemon-list [pokemons]="pokemons" (selectPokemon)="onSelectPokemon($event)">
-      </app-pokemon-list>
+    <ng-container *ngIf="!isLoading && !error">
+      <div class="pokemon-page__list">
+        <app-pokemon-list [pokemons]="pokemons" (selectPokemon)="onSelectPokemon($event)"></app-pokemon-list>
+        <app-pagination [currentPage]="currentPage" [totalPages]="totalPages"
+          (pageChange)="onPageChange($event)"></app-pagination>
+      </div>
 
-      <app-pagination [currentPage]="currentPage" [totalPages]="totalPages" (pageChange)="onPageChange($event)">
-      </app-pagination>
-    </div>
-
-    <div *ngIf="selectedPokemon" class="pokemon-page__detail">
-      <app-pokemon-detail [pokemon]="selectedPokemon" (close)="onClosePokemonDetail()">
-      </app-pokemon-detail>
-    </div>
+      <div *ngIf="selectedPokemon" class="pokemon-page__detail">
+        <app-pokemon-detail [pokemon]="selectedPokemon" (close)="onClosePokemonDetail()"></app-pokemon-detail>
+      </div>
+    </ng-container>
   </div>
 </div>
