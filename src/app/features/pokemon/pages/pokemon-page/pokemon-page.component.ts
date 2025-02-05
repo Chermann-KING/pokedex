@@ -17,6 +17,8 @@ export class PokemonPageComponent implements OnInit {
   totalPages = 1;
   itemsPerPage = 20;
   searchTerm = '';
+  isLoading = false;
+  error: string | null = null;
 
   constructor(private _pokemonService: PokemonService) {}
 
@@ -25,6 +27,9 @@ export class PokemonPageComponent implements OnInit {
   }
 
   async loadPokemons(): Promise<void> {
+    this.isLoading = true;
+    this.error = null;
+
     try {
       const offset = (this.currentPage - 1) * this.itemsPerPage;
       const data = await this._pokemonService.getPokemons(
@@ -35,7 +40,10 @@ export class PokemonPageComponent implements OnInit {
       this.pokemons = data.results;
       this.totalPages = Math.ceil(data.count / this.itemsPerPage);
     } catch (error) {
-      console.error('Erreur lors du chargement des Pokémons:', error);
+      this.error = 'Impossible de charger les Pokémons. Veuillez réessayer.';
+      console.error('Erreur:', error);
+    } finally {
+      this.isLoading = false;
     }
   }
 

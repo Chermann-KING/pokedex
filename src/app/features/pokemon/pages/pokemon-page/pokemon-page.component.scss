@@ -37,6 +37,16 @@
   min-width: 0;
 }
 
+.pokemon-page__loader,
+.pokemon-page__error {
+  text-align: center;
+  padding: 2rem;
+}
+
+.pokemon-page__error {
+  color: #dc3545;
+}
+
 @media (max-width: 1024px) {
   .pokemon-page__content {
     grid-template-columns: 1fr;

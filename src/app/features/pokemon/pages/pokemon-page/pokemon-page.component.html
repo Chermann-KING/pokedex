@@ -6,7 +6,15 @@
   </header>
 
   <div class="pokemon-page__content">
-    <div class="pokemon-page__list">
+    <div *ngIf="isLoading" class="pokemon-page__loader">
+      Chargement...
+    </div>
+
+    <div *ngIf="error" class="pokemon-page__error">
+      {{ error }}
+    </div>
+
+    <div *ngIf="!isLoading && !error" class="pokemon-page__list">
       <app-pokemon-list [pokemons]="pokemons" (selectPokemon)="onSelectPokemon($event)">
       </app-pokemon-list>
 

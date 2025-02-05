@@ -1,0 +1,8 @@
+{
+  "routes": [
+    {
+      "source": "/api/pokemon/:path*",
+      "destination": "https://pokeapi.co/api/v2/pokemon/:path*"
+    }
+  ]
+}
