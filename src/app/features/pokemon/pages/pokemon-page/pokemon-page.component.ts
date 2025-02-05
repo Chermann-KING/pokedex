@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { PokemonService } from '../../../../core/services/pokemon.service';
 import { Pokemons } from '../../../../core/models/pokemons.model';
 import { Pokemon } from '../../../../core/models/pokemon.model';
@@ -10,7 +11,7 @@ import { Pokemon } from '../../../../core/models/pokemon.model';
   templateUrl: './pokemon-page.component.html',
   styleUrl: './pokemon-page.component.scss',
 })
-export class PokemonPageComponent implements OnInit {
+export class PokemonPageComponent implements OnInit, OnDestroy {
   pokemons: Pokemons[] = [];
   selectedPokemon: Pokemon | null = null;
   currentPage = 1;
@@ -19,6 +20,7 @@ export class PokemonPageComponent implements OnInit {
   searchTerm = '';
   isLoading = false;
   error: string | null = null;
+  private _subscription = new Subscription();
 
   constructor(private _pokemonService: PokemonService) {}
 
@@ -26,36 +28,38 @@ export class PokemonPageComponent implements OnInit {
     this.loadPokemons();
   }
 
-  async loadPokemons(): Promise<void> {
+  loadPokemons(): void {
     this.isLoading = true;
     this.error = null;
 
-    try {
-      const offset = (this.currentPage - 1) * this.itemsPerPage;
-      const data = await this._pokemonService.getPokemons(
-        offset,
-        this.itemsPerPage,
-        this.searchTerm
-      );
-      this.pokemons = data.results;
-      this.totalPages = Math.ceil(data.count / this.itemsPerPage);
-    } catch (error) {
-      this.error = 'Impossible de charger les Pokémons. Veuillez réessayer.';
-      console.error('Erreur:', error);
-    } finally {
-      this.isLoading = false;
-    }
+    const offset = (this.currentPage - 1) * this.itemsPerPage;
+    this._subscription.add(
+      this._pokemonService
+        .getPokemons(offset, this.itemsPerPage, this.searchTerm)
+        .subscribe({
+          next: (data) => {
+            this.pokemons = data.results;
+            this.totalPages = Math.ceil(data.count / this.itemsPerPage);
+            this.isLoading = false;
+          },
+          error: (error) => {
+            this.error =
+              'Impossible de charger les Pokémons. Veuillez réessayer.';
+            console.error('Erreur:', error);
+            this.isLoading = false;
+          },
+        })
+    );
   }
 
-  async onSelectPokemon(pokemon: Pokemons): Promise<void> {
-    try {
-      const id = this.getIdFromUrl(pokemon.url);
-      this.selectedPokemon = await this._pokemonService.getPokemonById(
-        Number(id)
-      );
-    } catch (error) {
-      console.error('Erreur lors du chargement des détails du Pokémon:', error);
-    }
+  onSelectPokemon(pokemon: Pokemons): void {
+    const id = this.getIdFromUrl(pokemon.url);
+    this._subscription.add(
+      this._pokemonService.getPokemonById(Number(id)).subscribe({
+        next: (pokemon) => (this.selectedPokemon = pokemon),
+        error: (error) => console.error('Erreur:', error),
+      })
+    );
   }
 
   getIdFromUrl(url: string): string {
@@ -76,5 +80,9 @@ export class PokemonPageComponent implements OnInit {
 
   onClosePokemonDetail(): void {
     this.selectedPokemon = null;
+  }
+
+  ngOnDestroy(): void {
+    this._subscription.unsubscribe();
   }
 }
