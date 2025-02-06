@@ -17,7 +17,9 @@
 
     <ng-container *ngIf="!isLoading && !error">
       <div class="pokemon-page__list">
-        <app-pokemon-list [pokemons]="pokemons" (selectPokemon)="onSelectPokemon($event)"></app-pokemon-list>
+        <div class="pokemon-list-container">
+          <app-pokemon-list [pokemons]="pokemons" (selectPokemon)="onSelectPokemon($event)"></app-pokemon-list>
+        </div>
         <app-pagination [currentPage]="currentPage" [totalPages]="totalPages"
           (pageChange)="onPageChange($event)"></app-pagination>
       </div>
